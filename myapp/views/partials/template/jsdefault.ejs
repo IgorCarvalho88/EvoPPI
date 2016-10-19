@@ -1,0 +1,103 @@
+ <!-- jQuery -->
+    <script src="javascripts/jquery.js"></script>
+
+    <!-- javascript -->
+    <!--<script src="javascripts/javascript.js"></script>-->
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="javascripts/bootstrap.min.js"></script>
+    <script src="javascripts/select2.min.js"></script>
+    <script src="javascripts/typeahead.jquery.min.js"></script>
+    <script src="javascripts/bloodhound.min.js"></script>
+    <script src="javascripts/typeahead.bundle.min.js"></script>
+    <script src="javascripts/bootstrap3-typeahead.min.js"></script>
+
+
+    <script>
+      function parseData(data){
+
+        var finalData = [];
+        for (var i = 0; i < data.length; i++) { 
+          for (var j = 0; j < data[i].length; j++) { 
+            finalData.push(data[i][j]);
+          }
+        }
+
+        //console.log(finalData);
+        return finalData;
+
+      }
+
+	    function myFunction() {
+	    	var x = document.getElementById("mySelect").value;
+	    	var url = "/genes/" + x;
+
+            
+            var url2 = "/interactome/" + x;
+
+	    	$.ajax({
+    		type: "GET",
+    		url: url,
+
+    	   }).done(function(data){
+
+            var genes = parseData(data);
+
+            $('#query').typeahead({        
+                   source : genes
+            });
+
+    	   });
+
+
+            $.ajax({
+                type: "GET",
+                url: url2,
+
+            }).done(function(data){
+                //var result = $()
+                //alert(data);
+                //console.log(data);
+                var select = document.getElementById("interactome1");
+                for (var i = 0; i < data.length; i++) { // from 1 to 10
+                    var option = document.createElement("option");
+                    var text = document.createTextNode(data[i]);
+                    option.appendChild(text);
+                    select.appendChild(option);
+                }
+
+                });
+
+	    }
+
+
+
+
+
+
+
+         function myFunction2() {
+            var x = document.getElementById("mySelect2").value;
+            var url2 = "/interactome/" + x;
+
+            $.ajax({
+                type: "GET",
+                url: url2,
+
+            }).done(function(data){
+                //var result = $()
+                //alert(data);
+                //console.log(data);
+                var select = document.getElementById("interactome2");
+                for (var i = 0; i < data.length; i++) { // from 1 to 10
+                    var option = document.createElement("option");
+                    var text = document.createTextNode(data[i]);
+                    option.appendChild(text);
+                    select.appendChild(option);
+                }
+
+                });
+
+        }
+    	
+    </script>

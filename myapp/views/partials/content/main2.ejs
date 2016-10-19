@@ -1,0 +1,46 @@
+<!-- Page Heading/Breadcrumbs -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">EvoPPI
+                    <small>Species</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Home</a>
+                    </li>
+                    <li class="active">Full Width Page</li>
+                </ol>
+            </div>
+        </div>
+
+     
+ <!--<div class="container">-->
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><%= finalResult[1][0]; %></h3>
+                </div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Interacts</th>
+                        <th>Species</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% for (var i = 0; i < finalResult.length; i++) { %>
+                    <tr>
+                        <td> <%= finalResult[i][1]; %> </td>
+                        <td> <%= finalResult[i][2]; %> </td>
+                    </tr>
+                    <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+            
+<!--</div>-->
+
+<hr>
