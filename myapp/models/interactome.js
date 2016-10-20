@@ -5,6 +5,7 @@ var path = require('path');
 // creating path to database
 var fileFolderPath = path.join(__dirname, '..', 'database/interactome');
 
+
 exports.getAllInteractomes = function(fileName){
 
 
@@ -84,11 +85,6 @@ function parseFile(data, fileName){
    return jsonObj;
 }*/
 
-
-
-
-
-
 exports.getGeneInteractions = function(gene, interactome){
 	var interactions = [];
 	var interactionsOrdered;
@@ -114,19 +110,6 @@ exports.getGeneInteractions = function(gene, interactome){
     
 	return interactionsOrdered;
 };
-
-
-exports.addLabel1 = function(interactome){
-	interactome.unshift("1");
-
-	return interactome;
-}
-
-exports.addLabel2 = function(interactome){
-	interactome.unshift("2");
-
-	return interactome;
-}
 
 
 exports.compare = function(interactome1, interactome2){
@@ -159,26 +142,22 @@ exports.compare = function(interactome1, interactome2){
 	}
 
 	// from smallest to big
-	var finalArray = smallest(interactome2, arrayCompare); 
+	var finalArray = addMissingGenes(interactome2, arrayCompare); 
     
 	return finalArray;
 };
 
 
 
-
-
-
-
 // auxiliar functions
 
-function smallest(smallestArray, arrayCompare)
+function addMissingGenes(interactome2, arrayCompare)
 {
 	var found = false;
 
-	for (var i = 0; i < smallestArray.length; i++) { 
+	for (var i = 0; i < interactome2.length; i++) { 
 		for (var j = 0; j < arrayCompare.length; j++) {
-			if(smallestArray[i][1] == arrayCompare[j][1] && found == false)
+			if(interactome2[i][1] == arrayCompare[j][1] && found == false)
 			{
 				found = true;
 				break;
@@ -187,7 +166,7 @@ function smallest(smallestArray, arrayCompare)
 		}
 		if(found == false)
 		{
-			arrayCompare.push(smallestArray[i]);
+			arrayCompare.push(interactome2[i]);
 			arrayCompare[arrayCompare.length-1].push("1");
 
 		}

@@ -45,7 +45,7 @@
         </div>
 
 
-    <form method = "GET" action = "/interactome">
+    <form>
 
         <!--Content for interactome-->
         <div class = "row">
@@ -93,30 +93,14 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Results</h3>
                 </div>
-                <table class="table">
-                    <thead>
+                <table id = "table" class="table">
+                     <thead>
                     <tr>
-                        <th>Species1</th>
-                        <th>Species2</th>
-                        <th>Compare</th>
+                        <th>Interacts</th>
+                        <th>Species</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                        <td>Carro</td>
-                        <td>Opel</td>
-                        <td>Corsa</td>
-                    </tr>
-                    <tr>
-                        <td>BMW</td>
-                        <td>BMW</td>
-                        <td>325</td>
-                    </tr>
-                    <tr>
-                        <td>Carro</td>
-                        <td>Chevrolet</td>
-                        <td>Aveo</td>
-                    </tr>
+                    <tbody id = "tbody">
                     </tbody>
                 </table>
             </div>

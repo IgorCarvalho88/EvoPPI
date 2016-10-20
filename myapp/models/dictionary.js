@@ -41,8 +41,6 @@ exports.readFile = function(fileName){
 	var filePath = path.join(__dirname, '..', 'database/dictionary', addExtension);
 	data = fs.readFileSync(filePath, 'utf8');
 
-	// remove extensions
-
 	var parsedFile = parseFile(data, fileName);
 	return parsedFile;	
 

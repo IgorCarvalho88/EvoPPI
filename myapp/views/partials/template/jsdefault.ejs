@@ -73,9 +73,6 @@
 
 
 
-
-
-
          function myFunction2() {
             var x = document.getElementById("mySelect2").value;
             var url2 = "/interactome/" + x;
@@ -99,5 +96,30 @@
                 });
 
         }
+
+
+        $('form').on('submit', function(event){
+            event.preventDefault();
+            $.ajax('/interactome', {
+                type: 'GET',
+                data: $('form').serialize()
+            
+            }).done(function(data){
+                var table = document.getElementById("tbody");
+                for (var i = 0; i < data.length; i++) { // from 1 to 10
+                    var row = document.createElement("tr");
+                    var column1 = document.createElement("td");
+                    var column2 = document.createElement("td");
+                    var text1 = document.createTextNode(data[i][1]);
+                    var text2 = document.createTextNode(data[i][2]);
+                    column1.appendChild(text1);
+                    column2.appendChild(text2);
+                    row.appendChild(column1);
+                    row.appendChild(column2);
+                    table.appendChild(row);
+                }
+            });
+
+        });
     	
     </script>

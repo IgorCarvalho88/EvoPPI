@@ -59,30 +59,23 @@ router.get('/interactome/', function(req, res, next){
 	var finalResult;
 
 	var gene = req.query.gene;
-	//var especieName = req.params.fileName.replace(" ", "_");
+	
 	firstInteractome = interactome.readFile(req.query.interactome1);
 	secondInteractome = interactome.readFile(req.query.interactome2);
 
 	interactions1 = interactome.getGeneInteractions(gene, firstInteractome.fileName);
 	interactions2 = interactome.getGeneInteractions(gene, secondInteractome.fileName);
 
-	//interactions1 =  interactome.addLabel1(interactions1);
-	//interactions2 =  interactome.addLabel2(interactions2);
-
-	//console.log(interactions1);
-	//console.log(interactions2);
-
+	
 	finalResult = interactome.compare(interactions1, interactions2);
-
-	//console.log(finalResult);
-	//res.send(interactomes);
+	res.send(finalResult);
 
 
-	res.render('teste',{
+	/*res.render('teste',{
 			title: 'Express',
 			finalResult:finalResult
 
-		});
+		});*/
 });
 
 
