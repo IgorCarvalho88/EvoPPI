@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var interactome = require('./../models/interactome.js');
 var dictionary = require('./../models/dictionary.js');
+var fasta = require('./../models/fasta.js');
 
 
 
@@ -12,8 +13,6 @@ router.get('/', function(req, res, next) {
 	//console.log(species);
 	//dictionary.readFile('Bos taurus.txt');
 
-	
-
 	res.render('index',{
 			title: 'Express',
 			species:species
@@ -22,7 +21,46 @@ router.get('/', function(req, res, next) {
 
 });
 
+/* GET different species page */
+router.get('/differentSpecies', function(req, res, next) {
+	var species;
+	species = dictionary.getAllSpecies();
 
+	res.render('teste',{
+			title: 'Express',
+			species:species
+
+		});
+
+});
+
+/*Route called by ajax function for different species page only*/
+/*jsdefault --> jquery function  --> #fasta*/
+router.get('/differentSpecies/:fileName', function(req, res, next){
+	
+	var gene = req.query.gene;
+	
+	var firstInteractome = interactome.readFile(req.query.interactome1);
+	var secondInteractome = interactome.readFile(req.query.interactome2);
+
+	var interactions1 = interactome.getGeneInteractions(gene, firstInteractome.fileName);
+	var interactions2 = interactome.getGeneInteractions(gene, secondInteractome.fileName);
+
+	//var fasta;
+	var especieName = req.params.fileName.replace(" ", "_");
+	teste1 = fasta.readFile(especieName, interactions1);
+	
+	// var finalResult = interactome.compare(interactions1, interactions2);
+	//res.send(finalResult);
+
+	var teste = "teste";
+
+	res.send(teste);
+
+});
+
+
+/*Routes called by ajax functions for species and different species page*/
 router.get('/genes/:fileName', function(req, res, next){
 	//res.send(req.params.fileName);
 	var genes;
@@ -40,15 +78,8 @@ router.get('/interactome/:fileName', function(req, res, next){
 	res.send(interactomes);
 });
 
-/*router.get('/interactome/:interactome1/:interactome2/:geneName', function(req, res, next){
-	var firstInteracome;
-	var secondInteracome;
-	//var especieName = req.params.fileName.replace(" ", "_");
-	firstInteracome = interactome.readFile(req.params.interactome1);
-	secondInteracome = interactome.readFile(req.params.interactome2);
-	res.send(interactomes);
-});*/
-
+/*Route called by ajax function for same species page only*/
+/*jsdefault --> jquery function  --> #sameSpecies*/
 router.get('/interactome/', function(req, res, next){
 	var firstInteractome;
 	var secondInteractome;

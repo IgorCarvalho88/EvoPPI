@@ -12,6 +12,78 @@
             </div>
         </div>
 
+    
+         <!--Content for Species-->
+        <div class = "row">
+            <div class="col-lg-6 species1">
+                <div class="form-group">
+                    <label class="control-label" for="company">Species1</label>
+                        <div class="">
+                            <select id="mySelect" class="form-control" onchange = "myFunction()">
+                            <option disabled selected value> -- select an option -- </option>
+                                <% species.forEach(function(species2){%>
+                                    <option><%= species2 %></option>
+                                <% }); %>
+                            </select> 
+                        </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 species1">
+                <div class="form-group">
+                    <label class="control-label" for="company">Species2</label>
+                        <div class="">
+                            <select id="mySelect2" class="form-control" onchange = "myFunction2()">
+                            <option disabled selected value> -- select an option -- </option>
+                                <% species.forEach(function(species2){%>
+                                    <option><%= species2 %></option>
+                                <% }); %>
+                            </select> 
+                        </div>
+                </div>
+            </div>
+        </div>
+
+
+    <form id = "fasta">
+
+        <!--Content for interactome-->
+        <div class = "row">
+            <div class="col-lg-6 species1">
+                <div class="form-group">
+                    <label class="control-label" for="company">Interactome1</label>
+                        <div class="">
+                            <select name = interactome1 id="interactome1" class="form-control">
+                            </select> 
+                        </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 species1">
+                <div class="form-group">
+                    <label class="control-label" for="company">Interactome2</label>
+                        <div class="">
+                            <select name = interactome2 id="interactome2" class="form-control">
+                            </select> 
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Content for gene-->
+        <div class = "row">
+            <div class="col-lg-6 col-lg-offset-3 species1">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="query">Genes</label>
+                            <input class="form-control" name="gene" id="query" placeholder="Start typing something to search genes" type="text">              
+                        </div>
+                    </fieldset>
+             </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Compare</button>
+    </form>
+
      
  <!--<div class="container">-->
     <hr>
@@ -19,22 +91,16 @@
         <div class="col-md-12">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><%= finalResult[1][0]; %></h3>
+                    <h3 class="panel-title">Results</h3>
                 </div>
-                <table class="table">
-                    <thead>
+                <table id = "table" class="table">
+                     <thead>
                     <tr>
                         <th>Interacts</th>
                         <th>Species</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <% for (var i = 0; i < finalResult.length; i++) { %>
-                    <tr>
-                        <td> <%= finalResult[i][1]; %> </td>
-                        <td> <%= finalResult[i][2]; %> </td>
-                    </tr>
-                    <% } %>
+                    <tbody id = "tbody">
                     </tbody>
                 </table>
             </div>

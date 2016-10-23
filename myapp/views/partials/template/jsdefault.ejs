@@ -31,8 +31,6 @@
 	    function myFunction() {
 	    	var x = document.getElementById("mySelect").value;
 	    	var url = "/genes/" + x;
-
-            
             var url2 = "/interactome/" + x;
 
 	    	$.ajax({
@@ -55,10 +53,8 @@
                 url: url2,
 
             }).done(function(data){
-                //var result = $()
-                //alert(data);
-                //console.log(data);
                 var select = document.getElementById("interactome1");
+                 $("#interactome1 option").remove();
                 for (var i = 0; i < data.length; i++) { // from 1 to 10
                     var option = document.createElement("option");
                     var text = document.createTextNode(data[i]);
@@ -82,10 +78,8 @@
                 url: url2,
 
             }).done(function(data){
-                //var result = $()
-                //alert(data);
-                //console.log(data);
                 var select = document.getElementById("interactome2");
+                $("#interactome2 option").remove();
                 for (var i = 0; i < data.length; i++) { // from 1 to 10
                     var option = document.createElement("option");
                     var text = document.createTextNode(data[i]);
@@ -98,14 +92,15 @@
         }
 
 
-        $('form').on('submit', function(event){
+        $('#sameSpecies').on('submit', function(event){
             event.preventDefault();
             $.ajax('/interactome', {
                 type: 'GET',
-                data: $('form').serialize()
+                data: $('#sameSpecies').serialize()
             
             }).done(function(data){
                 var table = document.getElementById("tbody");
+                $("#tbody tr").remove();
                 for (var i = 0; i < data.length; i++) { // from 1 to 10
                     var row = document.createElement("tr");
                     var column1 = document.createElement("td");
@@ -121,5 +116,21 @@
             });
 
         });
+
+        $("#fasta").on('submit', function(event){
+            var x = document.getElementById("mySelect").value;
+            var url = "/differentSpecies/" + x;
+            event.preventDefault();
+            $.ajax(url, {
+                type: 'GET',
+                data: $('#fasta').serialize()
+            
+            }).done(function(data){
+                console.log(data);
+            });
+
+        });
     	
     </script>
+
+    
