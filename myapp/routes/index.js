@@ -37,7 +37,7 @@ router.get('/differentSpecies', function(req, res, next) {
 /*Route called by ajax function for different species page only*/
 /*jsdefault --> jquery function  --> #fasta*/
 router.get('/differentSpecies/:fileName', function(req, res, next){
-	
+
 	var gene = req.query.gene;
 	
 	var firstInteractome = interactome.readFile(req.query.interactome1);
@@ -48,14 +48,25 @@ router.get('/differentSpecies/:fileName', function(req, res, next){
 
 	//var fasta;
 	var especieName = req.params.fileName.replace(" ", "_");
+	/*This will create query.txt file with gene and gene´s interactions from species1*/
 	teste1 = fasta.readFile(especieName, interactions1);
+
+	//fasta.execCMD2();
 	
 	// var finalResult = interactome.compare(interactions1, interactions2);
 	//res.send(finalResult);
 
-	var teste = "teste";
+	
+	res.send("teste");
 
-	res.send(teste);
+});
+
+/*Route called by ajax function for different species page only*/
+/*jsdefault --> jquery function  --> myfunction2*/
+router.get('/createDbTemp/:fileName', function(req, res, next){
+	var especieName = req.params.fileName.replace(" ", "_");
+	fasta.execCMD(especieName);
+	res.send("database created");
 
 });
 

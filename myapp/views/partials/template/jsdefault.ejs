@@ -72,6 +72,7 @@
          function myFunction2() {
             var x = document.getElementById("mySelect2").value;
             var url2 = "/interactome/" + x;
+            var url3 = "/createDbTemp/" + x;
 
             $.ajax({
                 type: "GET",
@@ -88,6 +89,18 @@
                 }
 
                 });
+
+
+            $.ajax({
+                type: "GET",
+                url: url3,
+
+            }).done(function(data){
+                console.log(data);
+            
+                });
+
+
 
         }
 
@@ -130,6 +143,10 @@
             });
 
         });
+
+        /*$("#mySelect2").change(function()){
+            alert( "Handler for .change() called." );
+        });*/
     	
     </script>
 
