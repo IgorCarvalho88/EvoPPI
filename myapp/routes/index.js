@@ -3,6 +3,11 @@ var router = express.Router();
 var interactome = require('./../models/interactome.js');
 var dictionary = require('./../models/dictionary.js');
 var fasta = require('./../models/fasta.js');
+var path = require('path');
+var readline = require('readline');
+var fs = require('fs');
+
+var query = path.join(__dirname, '..', 'database/fasta/query.txt');
 
 
 
@@ -38,6 +43,7 @@ router.get('/differentSpecies', function(req, res, next) {
 /*jsdefault --> jquery function  --> #fasta*/
 router.get('/differentSpecies/:fileName', function(req, res, next){
 
+		
 	var gene = req.query.gene;
 	
 	var firstInteractome = interactome.readFile(req.query.interactome1);
@@ -49,15 +55,15 @@ router.get('/differentSpecies/:fileName', function(req, res, next){
 	//var fasta;
 	var especieName = req.params.fileName.replace(" ", "_");
 	/*This will create query.txt file with gene and gene´s interactions from species1*/
-	teste1 = fasta.readFile(especieName, interactions1);
+	genes = fasta.createArrayGenes(interactions1);
+	filePath = fasta.createFilePath(especieName);
 
-	//fasta.execCMD2();
-	
-	// var finalResult = interactome.compare(interactions1, interactions2);
-	//res.send(finalResult);
 
-	
-	res.send("teste");
+	var cb =  function(arrayMatrix){
+			res.send(arrayMatrix);
+	}
+
+	fasta.createQuery(filePath, genes, interactions1, secondInteractome.fileName, cb);
 
 });
 
@@ -65,8 +71,10 @@ router.get('/differentSpecies/:fileName', function(req, res, next){
 /*jsdefault --> jquery function  --> myfunction2*/
 router.get('/createDbTemp/:fileName', function(req, res, next){
 	var especieName = req.params.fileName.replace(" ", "_");
+	/*Runs Command creating the DB blast Referring to the second species */
 	fasta.execCMD(especieName);
 	res.send("database created");
+	console.log("entrei");
 
 });
 

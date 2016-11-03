@@ -6,13 +6,12 @@ var child_process = require('child_process');
 // creating path to database
 var fileFolderPath = path.join(__dirname, '..', 'database/fasta');
 var blastPath = path.join(__dirname, '..', 'ncbi-blast-2.5.0+/bin/makeblastdb.exe');
-
 var blastPathOut = path.join(__dirname, '..', 'ncbi-blast-2.5.0+/bin/dbtemp1');
 var blastPathResult = path.join(__dirname, '..', 'ncbi-blast-2.5.0+/bin/tempresult');
 var blast = path.join(__dirname, '..', 'ncbi-blast-2.5.0+/bin/blastp.exe');
 var query = path.join(__dirname, '..', 'database/fasta/query.txt');
 
-exports.execCMD = function(especiesName){
+/*exports.execCMD = function(especiesName){
 	var fullName = especiesName + "_fasta";
 	var blastPathIn = path.join(__dirname, '..', 'ncbi-blast-2.5.0+/bin/', fullName);
 
@@ -21,6 +20,17 @@ exports.execCMD = function(especiesName){
 		console.log(stderr);
 	});
 
+};*/
+
+exports.execCMD = function(especiesName){
+	var fullName = especiesName + "_fasta";
+	var blastPathIn = path.join(__dirname, '..', 'ncbi-blast-2.5.0+/bin/', fullName);
+
+	//child_process.execFileSync(blastPath, ['-in', blastPathIn, '-dbtype', 'prot', '-out', blastPathOut]);
+	child_process.execFile(blastPath, ['-in', blastPathIn, '-dbtype', 'prot', '-out', blastPathOut], function(error, stdout, stderr){
+		console.log(stdout);
+		console.log(stderr);
+	});
 };
 
 //blastp.exe -query query.txt -db dbtemp -evalue 0.05 -max_target_seqs 20 -outfmt 6 -out tempresult
@@ -35,13 +45,13 @@ exports.execCMD = function(especiesName){
 };*/
 
 
-exports.readFile = function(Name, interactions){
+exports.createFilePath = function(Name){
 	var fileName;
 	var files = [];
 	var genes = [];
-	var filePath2 = path.join(__dirname, '..', 'database/fasta', "query.txt");
+	//var filePath2 = path.join(__dirname, '..', 'database/fasta', "query.txt");
 
-	genes = createArrayGenes(interactions);
+	//genes = createArrayGenes(interactions);
 	
 	files = fs.readdirSync(fileFolderPath);
 
@@ -55,17 +65,22 @@ exports.readFile = function(Name, interactions){
 
 	var filePath = path.join(__dirname, '..', 'database/fasta', fileName);
 	
+	//results = createQuery(filePath, genes);
+	//console.log(results);
+
+	return filePath;
+
+}
+
+
+
+exports.createQuery = function(filePath, genes, interactions1, interactome2, cb){
 
 	var lineReader = readline.createInterface({
 		input: fs.createReadStream(filePath)
 	});
 
-	var wstream = fs.createWriteStream(filePath2);
-
-	wstream.on('finish', function () {
-	  console.log('file has been written');
-	  execCMD2();
-	});
+	var wstream = fs.createWriteStream(query);
 
 	var flag =  false;
 	lineReader.on('line', function (line) {
@@ -85,25 +100,217 @@ exports.readFile = function(Name, interactions){
 		}
 	});
 
+
 	lineReader.on('close', () => {
   		 wstream.end();
 		});
-	
 
-	return files;
+	wstream.on('finish', function () {
+	  console.log('file has been written');
+
+	  function callback(arrayMatrix){
+	  	// create an associative array of genes
+	  	var array = interaction1TmpResult (interactions1, arrayMatrix);
+	  	var interactions2 = createInteractions2(array, interactome2);
+	  	// create array with [mainGene, sinonimo, interage, sinonimo, codigo ]
+	  	// missing the code 1, this menas that exists an interaction that doesn't exist in spcecies1
+	  	var halfArray = compareInt2(interactome2, array);
+	  	// complete the array with code1
+	  	var finalArray = compareFinal(interactions2, halfArray);
+	  	console.log(finalArray);
+	  	//interaction1TmpResult (interactions2, arrayMatrix);
+	  	cb(arrayMatrix);
+	  } 
+	  execCMD2(callback);
+	});
+
+};
+
+function createInteractions2(array, interactome2)
+{
+	var interactions2 = [];
+	for (var i = 1; i < array[0].length; i++) {
+		for (var j = 0; j < interactome2.length; j++) {
+			if(array[0][i] == interactome2[j][0] || array[0][i] == interactome2[j][1])
+			{
+				interactions2.push(interactome2[j]);
+			}
+		}
+	}
+	console.log(interactions2);
+	return interactions2;
+}
+
+
+function compareFinal(interactions2, halfArray)
+{
+	found = false;
+
+	for (var i = 0; i < interactions2.length; i++) {
+		array = [];
+		for (var j = 0; j < halfArray.length; j++) {
+			if((interactions2[i][0] == halfArray[j][1] && interactions2[i][1] == halfArray[j][3]) || 
+				interactions2[i][1] == halfArray[j][1] && interactions2[i][0] == halfArray[j][3])
+			{
+				found = true;
+				break;
+			}
+
+		}
+		if(found == false)
+		{
+			array.push(interactions2[i][0]);
+			array.push(interactions2[i][1]);
+			array.push("1");
+			halfArray.push(array);
+
+		}
+		
+		found = false;
+	}
+
+	return halfArray;
+}
+
+function compareInt2(interactome2, array)
+{
+	// TODO verificar para genes que não existem na base de dados devolvida pelo blast
+	
+	var bigArray = [];
+	found = false;
+	console.log(array);
+	console.log(interactome2);
+	for (var i = 1; i < array[0].length; i++) {
+		for (var j = 1; j < array.length; j++) {
+			for (var k = 1; k < array[j].length; k++) {
+				var smallArray = [];
+				for (var m = 0; m < interactome2.length; m++) {
+					if((array[0][i] == interactome2[m][0] && array[j][k] == interactome2[m][1]) ||
+						(array[0][i] == interactome2[m][1] && array[j][k] == interactome2[m][0]))
+						{
+							found = true;
+							smallArray.push(array[0][0]);
+							smallArray.push(array[0][i]);
+							smallArray.push(array[j][0]);
+							smallArray.push(array[j][k]);
+							smallArray.push("2");
+							
+						}
+				}
+				if(found == false)
+					{
+						smallArray.push(array[0][0]);
+						smallArray.push(array[0][i]);
+						smallArray.push(array[j][0]);
+						smallArray.push(array[j][k]);
+						smallArray.push("0");
+
+					}
+					bigArray.push(smallArray);
+					found = false;
+			}
+		}
+	}
+
+	console.log(bigArray);
+
+	return bigArray;
 
 }
 
-function execCMD2(){
-	child_process.execFile(blast, ['-query', query, '-db', blastPathOut, '-evalue', '0.05', '-max_target_seqs', '20', '-outfmt',  '6', '-out', blastPathResult], function(error, stdout, stderr){
-		console.log(stdout);
-		console.log(stderr);
+function execCMD2 (callback){
+
+	// passar para sincrono
+
+	
+	child = child_process.execFileSync(blast, ['-query', query, '-db', blastPathOut, '-evalue', '0.05', '-max_target_seqs', '1', '-outfmt',  '6', '-out', blastPathResult]);
+	
+	var results = [];
+	var lineReader = readline.createInterface({
+		input: fs.createReadStream(blastPathResult)
+		});
+
+		lineReader.on('line', function (line) {
+			var lineStr = line.split("\t");
+			results.push(lineStr);
 	});
+		
+		lineReader.on('close', () => {
+  			 callback(results);
+		});
+		
 };
+
+
+function interaction1TmpResult (interactions1, tmpResult){
+	
+	var auxiliarArray = [];
+
+	for (var i = 0; i < interactions1.length; i++) {
+		if(i==0)
+		{
+			var mainGene = [];
+			mainGene.push(interactions1[0][0]);
+			for (var j = 0; j < tmpResult.length; j++) {
+				if(interactions1[0][0] == tmpResult[j][0]){
+					mainGene.push(tmpResult[j][1]);
+					
+				}
+			}
+			auxiliarArray.push(mainGene);
+		}
+
+		var interactGene = [];
+		interactGene.push(interactions1[i][1]);
+		for (var j = 0; j < tmpResult.length; j++) {
+			if(interactions1[i][1] == tmpResult[j][0]){
+				//console.log(tmpResult[j][1]);
+				interactGene.push(tmpResult[j][1]);
+			}
+		}
+		auxiliarArray.push(interactGene);
+	}
+ 	
+	return auxiliarArray;
+};
+
+
+/*if(interactome1[i][j] == tmpResult[j][0])
+			{
+				
+				interactome1[i].splice(1, 0, tmpResult[j][1]);
+				if(i = 1)
+				{
+					interactome1[i].splice(3, 0, tmpResult[j][1]);
+				}
+			}*/
+
+function createAuxiliarArray(interactome1)
+{
+	var auxiliarArray = [];
+	for (var i = 0; i < interactome1.length; i++) {
+		auxiliarArray.push(interactome1[i]);
+	}
+
+	return auxiliarArray;
+}
+
+function auxiliar(element, tmpResult)
+{
+
+	for (var i = 0; i < tmpResult.length; i++) {
+		 if(element == tmpResult[i][0])
+		 {
+		 	return true;
+		 }
+	}
+	return false;
+}
 
 /*utility functions*/
 
-function createArrayGenes(interactions){
+
+exports.createArrayGenes = function(interactions){
 	var genes = [];
 
 	for (var i = 0; i < interactions.length; i++) {
