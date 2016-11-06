@@ -119,7 +119,7 @@ exports.createQuery = function(filePath, genes, interactions1, interactome2, cb)
 	  	var finalArray = compareFinal(interactions2, halfArray);
 	  	console.log(finalArray);
 	  	//interaction1TmpResult (interactions2, arrayMatrix);
-	  	cb(arrayMatrix);
+	  	cb(finalArray);
 	  } 
 	  execCMD2(callback);
 	});
@@ -223,7 +223,7 @@ function execCMD2 (callback){
 	// passar para sincrono
 
 	
-	child = child_process.execFileSync(blast, ['-query', query, '-db', blastPathOut, '-evalue', '0.05', '-max_target_seqs', '1', '-outfmt',  '6', '-out', blastPathResult]);
+	child = child_process.execFileSync(blast, ['-query', query, '-db', blastPathOut, '-evalue', '0.05', '-max_target_seqs', '3', '-outfmt',  '6', '-out', blastPathResult]);
 	
 	var results = [];
 	var lineReader = readline.createInterface({

@@ -70,7 +70,8 @@ router.get('/differentSpecies/:fileName', function(req, res, next){
 /*Route called by ajax function for different species page only*/
 /*jsdefault --> jquery function  --> myfunction2*/
 router.get('/createDbTemp/:fileName', function(req, res, next){
-	var especieName = req.params.fileName.replace(" ", "_");
+	//var especieName = req.params.fileName.replace(" ", "_");
+	var especieName = req.params.fileName;
 	/*Runs Command creating the DB blast Referring to the second species */
 	fasta.execCMD(especieName);
 	res.send("database created");
