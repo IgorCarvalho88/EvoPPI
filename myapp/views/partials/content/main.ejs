@@ -19,7 +19,7 @@
                 <div class="form-group">
                     <label class="control-label" for="company">Species1</label>
                         <div class="">
-                            <select id="mySelect" class="form-control" onchange = "myFunction()">
+                            <select id="mySelect" class="form-control" onchange = "mySelect()">
                             <option disabled selected value> -- select an option -- </option>
                                 <% species.forEach(function(species2){%>
                                     <option><%= species2 %></option>
@@ -33,7 +33,7 @@
                 <div class="form-group">
                     <label class="control-label" for="company">Species2</label>
                         <div class="">
-                            <select id="mySelect2" class="form-control" onchange = "myFunction2()">
+                            <select id="mySelect2" class="form-control" onchange = "mySelect2()">
                             <option disabled selected value> -- select an option -- </option>
                                 <% species.forEach(function(species2){%>
                                     <option><%= species2 %></option>

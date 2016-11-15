@@ -28,7 +28,7 @@
 
       }
 
-	    function myFunction() {
+	    function mySelect() {
 	    	var x = document.getElementById("mySelect").value;
 	    	var url = "/genes/" + x;
             var url2 = "/interactome/" + x;
@@ -69,7 +69,28 @@
 
 
 
-         function myFunction2() {
+         function mySelect2() {
+            var x = document.getElementById("mySelect2").value;
+            var url2 = "/interactome/" + x;
+
+            $.ajax({
+                type: "GET",
+                url: url2,
+
+            }).done(function(data){
+                var select = document.getElementById("interactome2");
+                $("#interactome2 option").remove();
+                for (var i = 0; i < data.length; i++) { // from 1 to 10
+                    var option = document.createElement("option");
+                    var text = document.createTextNode(data[i]);
+                    option.appendChild(text);
+                    select.appendChild(option);
+                }
+
+                });
+        }
+
+        function differentSpeciesMySelect2() {
             var x = document.getElementById("mySelect2").value;
             var url2 = "/interactome/" + x;
             var url3 = "/createDbTemp/" + x;
@@ -100,6 +121,7 @@
 
 
         }
+
 
 
         $('#sameSpecies').on('submit', function(event){
@@ -137,6 +159,13 @@
             
             }).done(function(data){
                 //console.log(data);
+                /*if(data = "/differentSpecies")
+                {
+                    $("#getModal").modal('show');
+
+                }*/
+                //else
+                //{
                 var table = document.getElementById("tbody");
                 $("#tbody tr").remove();
                 for (var i = 0; i < data.length; i++) { // from 1 to 10
@@ -163,9 +192,42 @@
                     row.appendChild(column5);
                     table.appendChild(row);
                 }
+               // }
             });
 
         });
+
+        $("#export").click(function() {
+            
+            var finalData = [];
+           // console.log("entro");
+            $('table tbody tr').each(function() { // Finds all children <tr> elements
+                var data = [];
+                $(this).find("td").each(function(){ // Visits every single <td> element
+                    data.push($(this).text());       // Push out the text within the <td>
+                });
+                finalData.push(data);    
+             });
+
+             $.ajax({
+              type : "POST",
+              url : '/download',
+              data : JSON.stringify(finalData),
+              contentType: 'application/json',
+              //data : finalData,
+              success: function(data) {
+                    //console.log(data);
+                    window.location = '/download2';
+                  //window.location = '/path/to/download?arg=1';
+              },
+              error : function() {
+              }
+        });
+
+            //console.log(finalData);
+            
+});
+
 
         /*$("#mySelect2").change(function()){
             alert( "Handler for .change() called." );

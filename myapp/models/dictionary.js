@@ -15,14 +15,18 @@ exports.getAllSpecies = function(){
 		// In case that we hava a txt extension
 		if(file.endsWith('txt'))
 		{
-			var name;
-			name = file.substring(0, file.length-4);
-			//console.log(name);
+			var aux;
+			aux = file.substring(0, file.length-4);
+			// remove underscores
+			var name = aux.replace(/_/g, " ")
+			console.log(name);
 			finalFiles.push(name);
 			// In case we have word ending with dictionary word
 		}else{
-			var name2;
-			name2 = file.substring(0, file.length-11);
+			var aux2;
+			aux2 = file.substring(0, file.length-11);
+			// remove underscores
+			var name2 = aux2.replace(/_/g, " ")
 			//console.log(name2);
 			finalFiles.push(name2);
 		}

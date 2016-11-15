@@ -1,4 +1,3 @@
-#http://interactome3d.irbbarcelona.org/downloadset.php?queryid=btaurus&release=current&path=complete
 CD1D	B2M
 CD1D	B2M
 CD1D	B2M

@@ -19,7 +19,7 @@
                 <div class="form-group">
                     <label class="control-label" for="company">Species1</label>
                         <div class="">
-                            <select id="mySelect" class="form-control" onchange = "myFunction()">
+                            <select id="mySelect" class="form-control" onchange = "mySelect()">
                             <option disabled selected value> -- select an option -- </option>
                                 <% species.forEach(function(species2){%>
                                     <option><%= species2 %></option>
@@ -33,7 +33,7 @@
                 <div class="form-group">
                     <label class="control-label" for="company">Species2</label>
                         <div class="">
-                            <select id="mySelect2" class="form-control" onchange = "myFunction2()">
+                            <select id="mySelect2" class="form-control" onchange = "differentSpeciesMySelect2()">
                             <option disabled selected value> -- select an option -- </option>
                                 <% species.forEach(function(species2){%>
                                     <option><%= species2 %></option>
@@ -81,12 +81,53 @@
                     </fieldset>
              </div>
         </div>
+        <div class = "row">
+            <div class="col-lg-6 col-lg-offset-3 species1">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="query">Expect value</label>
+                            <input class="form-control" name="e_value" id="e-value"  type="text">              
+                        </div>
+                    </fieldset>
+             </div>
+        </div>
+        <div class = "row">
+            <div class="col-lg-6 col-lg-offset-3 species1">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="query">Length of alignment block</label>
+                            <input class="form-control" name="lengthAlignment" id="lengthAlignment"  type="text">              
+                        </div>
+                    </fieldset>
+             </div>
+        </div>
+        <div class = "row">
+            <div class="col-lg-6 col-lg-offset-3 species1">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="query">Number of descriptions</label>
+                            <input class="form-control" name="numberDescriptions" id="numberDescriptions"  type="text">              
+                        </div>
+                    </fieldset>
+             </div>
+        </div>
+        <div class = "row">
+            <div class="col-lg-6 col-lg-offset-3 species1">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="query">Minimum identity(%)</label>
+                            <input class="form-control" name="minimumIdentity" id="minimumIdentity"  type="text">              
+                        </div>
+                    </fieldset>
+             </div>
+        </div>
         <button type="submit" class="btn btn-primary">Compare</button>
     </form>
 
      
  <!--<div class="container">-->
     <hr>
+   <!--  <div id = "export"> -->
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-primary">
@@ -112,7 +153,23 @@
                 </table>
             </div>
         </div>
+   <!--  </div> -->
+    <button id = "export" type="submit" class="btn btn-primary">Export</button>
     </div>
+
+    <div class="modal fade" id="getModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Gene</h4>
+      </div>
+      <div class="modal-body">
+        <p>Gene missing on interactome</p>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
             
 <!--</div>-->
 

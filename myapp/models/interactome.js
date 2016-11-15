@@ -33,7 +33,7 @@ exports.getAllInteractomes = function(fileName){
 
 
 exports.readFile = function(fileName){
-
+	console.log(fileName);
 	//TODO
 	//Receive interactome as parameter, to show on client too
 	//var addExtension = fileName + ".txt";
