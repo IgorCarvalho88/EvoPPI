@@ -3,6 +3,7 @@ var router = express.Router();
 var interactome = require('./../models/interactome.js');
 var dictionary = require('./../models/dictionary.js');
 var fasta = require('./../models/fasta.js');
+var wholeInteractome = require('./../models/wholeInteractome.js');
 var path = require('path');
 var readline = require('readline');
 var fs = require('fs');
@@ -44,56 +45,50 @@ router.get('/differentSpecies/:fileName', function(req, res, next){
 
 		
 	var gene = req.query.gene;
-	
-	//if (gene)
-	//{
-		var firstInteractome = interactome.readFile(req.query.interactome1);
-		var secondInteractome = interactome.readFile(req.query.interactome2);
-		var e_value = req.query.e_value;
-		var lengthAlignment = req.query.lengthAlignment;
-		var numberDescriptions = req.query.numberDescriptions;
-		var minimumIdentity = req.query.minimumIdentity;
+	var firstInteractome = interactome.readFile(req.query.interactome1);
+	var secondInteractome = interactome.readFile(req.query.interactome2);
+	var e_value = req.query.e_value;
+	var lengthAlignment = req.query.lengthAlignment;
+	var numberDescriptions = req.query.numberDescriptions;
+	var minimumIdentity = req.query.minimumIdentity;
 
+	var especieName = req.params.fileName.replace(" ", "_");
+	filePath = fasta.createFilePath(especieName);
+	/*if gene field is empty(front end)*/
+	if (gene)
+	{
+		
 		var interactions1 = interactome.getGeneInteractions(gene, firstInteractome.fileName);
 		var interactions2 = interactome.getGeneInteractions(gene, secondInteractome.fileName);
 
-		//console.log(interactions1);
-		//if(interactions1.length == 0)
-		//{
-			//res.send("Missing gene on interactome");
+		/*If gene is not on interactome1*/
+		if(interactions1.length == 0)
+		{
+			res.send("Missing gene on interactome");
 			//res.redirect('/differentSpecies');
-		//}
+		}
+		else
+		{
+			
+			genes = fasta.createArrayGenes(interactions1);
 
-		//var fasta;
-		var especieName = req.params.fileName.replace(" ", "_");
-		/*This will create query.txt file with gene and gene´s interactions from species1*/
-		genes = fasta.createArrayGenes(interactions1);
-		filePath = fasta.createFilePath(especieName);
+			var cb =  function(arrayMatrix){
+					res.send(arrayMatrix);
+			}
 
-
-		var cb =  function(arrayMatrix){
-				res.send(arrayMatrix);
+			fasta.createQuery(filePath, genes, interactions1, secondInteractome.fileName, e_value, lengthAlignment, numberDescriptions, minimumIdentity, cb);
 		}
 
-		fasta.createQuery(filePath, genes, interactions1, secondInteractome.fileName, e_value, lengthAlignment, numberDescriptions, minimumIdentity, cb);
-	//}
-	/*else
+		
+	}
+	else
 	{
-		var firstInteractome = interactome.readFile(req.query.interactome1);
-		var secondInteractome = interactome.readFile(req.query.interactome2);
-		var e_value = req.query.e_value;
-		var lengthAlignment = req.query.lengthAlignment;
-		var numberDescriptions = req.query.numberDescriptions;
-		var minimumIdentity = req.query.minimumIdentity;
-
-		var especieName = req.params.fileName.replace(" ", "_");
-		genes = fasta.createArrayGenes2(firstInteractome);
-		filePath = fasta.createFilePath(especieName);
-
-		fasta.createQuery2(filePath, genes, firstInteractome, secondInteractome.fileName, e_value, lengthAlignment, numberDescriptions, minimumIdentity, cb);
-	}*/
-	
-	
+		var cb =  function(arrayMatrix){
+					res.send(arrayMatrix);
+			}
+		genes = wholeInteractome.createArrayGenes2(firstInteractome.fileName);
+		wholeInteractome.createQuery2(filePath, genes, firstInteractome.fileName, secondInteractome.fileName, e_value, lengthAlignment, numberDescriptions, minimumIdentity, cb);
+	}
 
 });
 

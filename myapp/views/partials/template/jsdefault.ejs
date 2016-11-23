@@ -115,7 +115,13 @@
             $.ajax({
                 type: "GET",
                 url: url3,
+                beforeSend: function() {
+                    $("#pleaseWaitDialog").modal('show');
+                },
 
+            }).done(function(){
+                //console.log("entro");
+                $("#pleaseWaitDialog").modal('hide');
             });
 
 
@@ -155,17 +161,22 @@
             event.preventDefault();
             $.ajax(url, {
                 type: 'GET',
-                data: $('#fasta').serialize()
+                data: $('#fasta').serialize(),
+                beforeSend: function() {
+                    $("#pleaseWaitDialog").modal('show');
+                },
             
             }).done(function(data){
                 //console.log(data);
-                /*if(data = "/differentSpecies")
+                if(data == "Missing gene on interactome")
                 {
+                    $("#pleaseWaitDialog").modal('hide');
                     $("#getModal").modal('show');
 
-                }*/
-                //else
-                //{
+                }
+                else
+                {
+                $("#pleaseWaitDialog").modal('hide');
                 var table = document.getElementById("tbody");
                 $("#tbody tr").remove();
                 for (var i = 0; i < data.length; i++) { // from 1 to 10
@@ -192,9 +203,14 @@
                     row.appendChild(column5);
                     table.appendChild(row);
                 }
-               // }
+                }
             });
 
+        });
+
+        $('#getModal').on('hidden.bs.modal', function () {
+            //console.log("entro");
+            location.reload();
         });
 
         $("#export").click(function() {
@@ -227,6 +243,52 @@
             //console.log(finalData);
             
 });
+        /*Loading message*/
+
+       /*$(document).ajaxSend(function(event, request, settings) {
+            $("#pleaseWaitDialog").modal('show');
+            //$('#pleaseWaitDialog').show();
+        });*/
+
+       /* $( document ).ajaxSend(function( event, jqxhr, settings ) {
+             var x = document.getElementById("mySelect2").value;
+             var url3 = "/createDbTemp/" + x;
+          if ( settings.url == url3 ) {
+            $("#pleaseWaitDialog").modal('show');
+             }
+        });
+
+        $( document ).ajaxComplete(function( event, jqxhr, settings ) {
+             var x = document.getElementById("mySelect2").value;
+             var url3 = "/createDbTemp/" + x;
+          if ( settings.url == url3 ) {
+            $("#pleaseWaitDialog").modal('hide');
+             }
+        });*/
+
+
+        /*$( document ).ajaxSend(function( event, jqxhr, settings ) {
+             var x = document.getElementById("mySelect").value;
+             var url3 = "/differentSpecies/" + x;
+          if ( settings.url == url3 ) {
+            $("#pleaseWaitDialog").modal('show');
+             }
+        });
+
+        $( document ).ajaxComplete(function( event, jqxhr, settings ) {
+             var x = document.getElementById("mySelect").value;
+             var url3 = "/differentSpecies/" + x;
+          if ( settings.url == url3 ) {
+            $("#pleaseWaitDialog").modal('hide');
+             }
+        });*/
+
+       /* $(document).ajaxComplete(function(event, request, settings) {
+
+            $("#pleaseWaitDialog").modal('hide');
+            //$('#pleaseWaitDialog').show();
+        });*/
+
 
 
         /*$("#mySelect2").change(function()){
